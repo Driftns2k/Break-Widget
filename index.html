@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>NBA Break Widget with Logos</title>
+  <title>NBA Break Widget with Team Logos</title>
   <style>
     html, body {
       margin: 0;
@@ -12,52 +12,79 @@
     }
 
     #container {
-      position: relative;
       width: 100vw;
       height: 100vh;
-    }
-
-    iframe {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      grid-template-rows: repeat(5, 1fr);
+      gap: 10px;
+      padding: 20px;
+      box-sizing: border-box;
       position: absolute;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
-      border: none;
     }
 
     .logo {
-      position: absolute;
-      width: 60px;
-      height: 60px;
-      pointer-events: none;
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      display: block;
     }
 
-    /* Position your logos here (grid or vertical layout) */
-    #logo-ATL { top: 20px; left: 50px; }
-    #logo-BOS { top: 90px; left: 50px; }
-    #logo-CLE { top: 160px; left: 50px; }
-
-    /* Add more teams below as needed */
+    iframe {
+      display: none;
+    }
   </style>
 </head>
 <body>
-  <div id="container">
-    <iframe id="widget" src="https://www.whatnot.com/user/geekoutcollect/obs/break-widget"></iframe>
+  <iframe id="widget" src="https://www.whatnot.com/user/geekoutcollect/obs/break-widget"></iframe>
 
-    <!-- NBA Logos -->
-    <img id="logo-ATL" class="logo" src="logos/ATL.png">
-    <img id="logo-BOS" class="logo" src="logos/BOS.png">
-    <img id="logo-CLE" class="logo" src="logos/CLE.png">
+  <div id="container">
+    <!-- Auto-generated team logos -->
+    <img class="logo" id="ATL" src="logos/ATL.png" alt="ATL">
+    <img class="logo" id="BOS" src="logos/BOS.png" alt="BOS">
+    <img class="logo" id="BKN" src="logos/BKN.png" alt="BKN">
+    <img class="logo" id="CHA" src="logos/CHA.png" alt="CHA">
+    <img class="logo" id="CHI" src="logos/CHI.png" alt="CHI">
+    <img class="logo" id="CLE" src="logos/CLE.png" alt="CLE">
+    <img class="logo" id="DAL" src="logos/DAL.png" alt="DAL">
+    <img class="logo" id="DEN" src="logos/DEN.png" alt="DEN">
+    <img class="logo" id="DET" src="logos/DET.png" alt="DET">
+    <img class="logo" id="GSW" src="logos/GSW.png" alt="GSW">
+    <img class="logo" id="HOU" src="logos/HOU.png" alt="HOU">
+    <img class="logo" id="IND" src="logos/IND.png" alt="IND">
+    <img class="logo" id="LAC" src="logos/LAC.png" alt="LAC">
+    <img class="logo" id="LAL" src="logos/LAL.png" alt="LAL">
+    <img class="logo" id="MEM" src="logos/MEM.png" alt="MEM">
+    <img class="logo" id="MIA" src="logos/MIA.png" alt="MIA">
+    <img class="logo" id="MIL" src="logos/MIL.png" alt="MIL">
+    <img class="logo" id="MIN" src="logos/MIN.png" alt="MIN">
+    <img class="logo" id="NOP" src="logos/NOP.png" alt="NOP">
+    <img class="logo" id="NYK" src="logos/NYK.png" alt="NYK">
+    <img class="logo" id="OKC" src="logos/OKC.png" alt="OKC">
+    <img class="logo" id="ORL" src="logos/ORL.png" alt="ORL">
+    <img class="logo" id="PHI" src="logos/PHI.png" alt="PHI">
+    <img class="logo" id="PHX" src="logos/PHX.png" alt="PHX">
+    <img class="logo" id="POR" src="logos/POR.png" alt="POR">
+    <img class="logo" id="SAC" src="logos/SAC.png" alt="SAC">
+    <img class="logo" id="SAS" src="logos/SAS.png" alt="SAS">
+    <img class="logo" id="TOR" src="logos/TOR.png" alt="TOR">
+    <img class="logo" id="UTA" src="logos/UTA.png" alt="UTA">
+    <img class="logo" id="WAS" src="logos/WAS.png" alt="WAS">
   </div>
 
   <script>
-    const logoMap = {
-      'ATL': document.getElementById('logo-ATL'),
-      'BOS': document.getElementById('logo-BOS'),
-      'CLE': document.getElementById('logo-CLE'),
-      // Add more mappings as needed
-    };
+    const teamIDs = [
+      "ATL", "BOS", "BKN", "CHA", "CHI", "CLE", "DAL", "DEN", "DET", "GSW",
+      "HOU", "IND", "LAC", "LAL", "MEM", "MIA", "MIL", "MIN", "NOP", "NYK",
+      "OKC", "ORL", "PHI", "PHX", "POR", "SAC", "SAS", "TOR", "UTA", "WAS"
+    ];
+
+    const logos = {};
+    teamIDs.forEach(id => {
+      logos[id] = document.getElementById(id);
+    });
 
     function checkWidget() {
       const frame = document.getElementById('widget');
@@ -65,29 +92,29 @@
 
       if (!frameDoc) return;
 
-      const textEls = frameDoc.querySelectorAll('body *');
-      const taken = new Set();
+      const elements = frameDoc.querySelectorAll('body *');
+      const takenTeams = new Set();
 
-      textEls.forEach(el => {
+      elements.forEach(el => {
         const text = el.textContent?.trim();
-        if (logoMap[text]) {
+        if (logos[text]) {
           const style = getComputedStyle(el);
           if (style.display !== 'none' && style.visibility !== 'hidden') {
-            taken.add(text);
+            takenTeams.add(text);
           }
         }
       });
 
-      for (const team in logoMap) {
-        logoMap[team].style.display = taken.has(team) ? 'none' : 'block';
-      }
+      teamIDs.forEach(id => {
+        logos[id].style.display = takenTeams.has(id) ? 'none' : 'block';
+      });
     }
 
     setInterval(() => {
       try {
         checkWidget();
       } catch (e) {
-        console.warn("Couldn’t access iframe — browser security may block it.");
+        console.warn("Cross-origin access issue — OBS should still render fine.");
       }
     }, 1000);
   </script>
