@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>NBA Break Widget with Logos</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: transparent;
+      overflow: hidden;
+    }
+
+    #container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .logo {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      pointer-events: none;
+    }
+
+    /* Position your logos here (grid or vertical layout) */
+    #logo-ATL { top: 20px; left: 50px; }
+    #logo-BOS { top: 90px; left: 50px; }
+    #logo-CLE { top: 160px; left: 50px; }
+
+    /* Add more teams below as needed */
+  </style>
+</head>
+<body>
+  <div id="container">
+    <iframe id="widget" src="https://www.whatnot.com/user/geekoutcollect/obs/break-widget"></iframe>
+
+    <!-- NBA Logos -->
+    <img id="logo-ATL" class="logo" src="logos/ATL.png">
+    <img id="logo-BOS" class="logo" src="logos/BOS.png">
+    <img id="logo-CLE" class="logo" src="logos/CLE.png">
+  </div>
+
+  <script>
+    const logoMap = {
+      'ATL': document.getElementById('logo-ATL'),
+      'BOS': document.getElementById('logo-BOS'),
+      'CLE': document.getElementById('logo-CLE'),
+      // Add more mappings as needed
+    };
+
+    function checkWidget() {
+      const frame = document.getElementById('widget');
+      const frameDoc = frame.contentDocument || frame.contentWindow.document;
+
+      if (!frameDoc) return;
+
+      const textEls = frameDoc.querySelectorAll('body *');
+      const taken = new Set();
+
+      textEls.forEach(el => {
+        const text = el.textContent?.trim();
+        if (logoMap[text]) {
+          const style = getComputedStyle(el);
+          if (style.display !== 'none' && style.visibility !== 'hidden') {
+            taken.add(text);
+          }
+        }
+      });
+
+      for (const team in logoMap) {
+        logoMap[team].style.display = taken.has(team) ? 'none' : 'block';
+      }
+    }
+
+    setInterval(() => {
+      try {
+        checkWidget();
+      } catch (e) {
+        console.warn("Couldn’t access iframe — browser security may block it.");
+      }
+    }, 1000);
+  </script>
+</body>
+</html>
