@@ -8,32 +8,35 @@
     * {
       box-sizing: border-box;
     }
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
       background-color: black;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      overflow: hidden;
     }
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-      gap: 24px;
-      width: 90vw;
-      max-width: 1200px;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 20px;
+      width: calc(6 * 100px + 5 * 20px); /* 6 logos, 5 gaps */
+      max-width: 100%;
+      height: auto;
       padding: 20px;
       justify-items: center;
       align-items: center;
     }
-    .team {
-      transition: opacity 0.3s ease;
-    }
     .team img {
-      width: 90px;
+      width: 100px;
       height: auto;
       display: block;
+    }
+    .team {
+      transition: opacity 0.3s ease;
     }
     .hidden {
       opacity: 0;
